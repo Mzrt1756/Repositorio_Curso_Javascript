@@ -3,11 +3,9 @@
 - Solicitar edad y género (masculino, femenino, otros).
 - Si edad<18 "Eres muy pequeño para jugar este juego"
 - Elegir entre 3 artefactos (espada, varita mágica, arco y flecha)
-- Si el jugador elige espada: guerrero, guerrera, mago, maga, arquero, arquera.
-- 
-- "Tienes 15 puntos para mejorar tus habilidades. Escribe el nombre de la habilidad para mejorarla: 1- Fuerza 2- Resistencia 3- Carisma 4- Inteligencia 5- Agilidad"
+- Dependiendo elección: guerrero, guerrera, mago, maga, arquero, arquera.
+- "Tienes 5 puntos para mejorar tus habilidades. Escribe el nombre de la habilidad para mejorarla: 1- Fuerza 2- Resistencia 3- Carisma 4- Inteligencia 5- Agilidad"
 - Empiezo ciclo: por cada contador cuento una situación y una decisión
-- Si nombreHabilidad es distinto de " " , un if y else if por cada opcion y un else si la opcion no esta en la lista "Esa habilidad no existe."
 */
 
 let nombreJugador = prompt("Bievenidx. Por favor ingresa tu nombre o alias preferidx.");
