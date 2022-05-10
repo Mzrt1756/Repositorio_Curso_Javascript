@@ -3,11 +3,9 @@
 - Solicitar edad y género (masculino, femenino, otros).
 - Si edad<18 "Eres muy pequeño para jugar este juego"
 - Elegir entre 3 artefactos (espada, varita mágica, arco y flecha)
-- Si el jugador elige espada: guerrero, guerrera, mago, maga, arquero, arquera.
-- 
-- "Tienes 15 puntos para mejorar tus habilidades. Escribe el nombre de la habilidad para mejorarla: 1- Fuerza 2- Resistencia 3- Carisma 4- Inteligencia 5- Agilidad"
+- Dependiendo elección: guerrero, guerrera, mago, maga, arquero, arquera.
+- "Tienes 5 puntos para mejorar tus habilidades. Escribe el nombre de la habilidad para mejorarla: 1- Fuerza 2- Resistencia 3- Carisma 4- Inteligencia 5- Agilidad"
 - Empiezo ciclo: por cada contador cuento una situación y una decisión
-- Si nombreHabilidad es distinto de " " , un if y else if por cada opcion y un else si la opcion no esta en la lista "Esa habilidad no existe."
 */
 
 let nombreJugador = prompt("Bievenidx. Por favor ingresa tu nombre o alias preferidx.");
@@ -24,6 +22,7 @@ else{
     generoJugador = generoJugador.toUpperCase();
     while(generoJugador != "M" && generoJugador != "F" && generoJugador != "OTRO"){
         generoJugador = prompt("Escribe una de las opciones. ¿Con qué género te sientes identificadx?: - M - F - Otro");
+        generoJugador = generoJugador.toUpperCase();
     }
     console.log(generoJugador);
     let artefacto= prompt("Elije un artefacto para empezar tu aventura: 1- Espada 2- Baston 3- Arco");
@@ -32,6 +31,7 @@ else{
     let personaje
     while(artefacto!="ESPADA" && artefacto!="BASTON" && artefacto!="ARCO"){
         artefacto = prompt("El artefacto no se encuentra en la lista. Elije un artefacto de la lista para empezar tu aventura: 1- Espada 2- Baston 3- Arco")
+        artefacto = artefacto.toUpperCase();
     }
     if(artefacto=="ESPADA" && generoJugador=="M"){
         personaje = "guerrero";
@@ -78,10 +78,11 @@ else{
     let habilidad; 
     alert("Gran "+ personaje + ", tienes 5 puntos para mejorar tus habilidades.");
     for (i=0;i<5;i++){
-        habilidad = prompt ("Elije la habilidad a mejorar: 1- Fuerza 2- Resistencia 3- Carisma 4- Inteligencia 5- Agilidad");
+        habilidad = prompt ("Escribe el nombre de la habilidad a mejorar: 1- Fuerza 2- Resistencia 3- Carisma 4- Inteligencia 5- Agilidad");
         habilidad = habilidad.toUpperCase();
         while (habilidad != "FUERZA" && habilidad != "RESISTENCIA" && habilidad != "CARISMA" && habilidad != "INTELIGENCIA" && habilidad != "AGILIDAD"){
             habilidad = prompt ("No te he ofrecido mejorar esa habilidad. Intenta elegir una de la lista: 1- Fuerza 2- Resistencia 3- Carisma 4- Inteligencia 5- Agilidad")
+            habilidad = habilidad.toUpperCase();
         }
         switch (habilidad){
             case "FUERZA":
