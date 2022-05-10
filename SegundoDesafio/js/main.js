@@ -1,20 +1,3 @@
-
-/*const cotizacionDolar = 116.75;
-const cotizarDolar = (pesos) => pesos / COTIZACION_DOLAR;
-const cotizarPesos = (dolar) => dolar * COTIZACION_DOLAR;
-let seleccion = prompt("SELECCIONAR COTIZACION \n 1 - DOLARES A PESOS \n 2 -  PESOS A DOLAR ");
-let valor = prompt("VALOR");
-switch (seleccion) {
-    case "1":
-        alert(cotizarPesos(valor));
-        break;
-    case "2":
-        alert(cotizarDolar(valor));
-        break;
-    default:
-        break;
-}
-*/
 const cotizador = () =>{
     const factorDolar = 0.0085526;
     const factorEuro = 0.0081213;
