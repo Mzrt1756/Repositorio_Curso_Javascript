@@ -279,9 +279,9 @@ const eliminarProductoArrayCarrito = () =>
         {
             let indice = arrayCarrito.indexOf(productoEncontrado);
             if (indice !== -1){
-                arrayCarrito.splice((indice-1),1);
-                console.log(`${arrayCarrito[(id-1)].nombre} fue eliminado del carrito exitosamente.`)
-                alert(`${arrayCarrito[(id-1)].nombre} fue eliminado del carrito exitosamente.`)
+                console.log(`${arrayCarrito[indice].nombre} fue eliminado del carrito exitosamente.`)
+                alert(`${arrayCarrito[indice].nombre} fue eliminado del carrito exitosamente.`)
+                arrayCarrito.splice((indice),1);
                 mostrarCarrito();
                 eliminarProductoArrayCarrito();  
             }else{
