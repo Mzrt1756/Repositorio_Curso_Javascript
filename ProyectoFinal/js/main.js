@@ -237,7 +237,8 @@ const agregarProductoArrayCarrito = () =>
         pregAgregarProductoCarrito = prompt("Opción Inválida. ¿Quiere agregar un producto al carrito?: SI/NO");
         pregAgregarProductoCarrito = pregAgregarProductoCarrito.toUpperCase();
     };
-    while (pregAgregarProductoCarrito=="SI"){
+    if(pregAgregarProductoCarrito=="SI"){
+        mostrarTienda();
         let id= Number(prompt("Ingrese el id del producto del catálogo que quiere agregar al carrito."));
         let existe = arrayTienda.some((producto)=>producto.id===(id));
         if(existe)
@@ -253,8 +254,9 @@ const agregarProductoArrayCarrito = () =>
             alert("Producto no encontrado.");
             agregarProductoArrayCarrito();       
         }
-    }
-    mostrarMenu();
+    }else{
+        return;
+    }   
 }
 
 //Funcion Eliminar Producto a Carrito
@@ -267,7 +269,8 @@ const eliminarProductoArrayCarrito = () =>
         pregEliminarProductoCarrito = prompt("Opción Inválida. ¿Quiere eliminar un producto del carrito?: SI/NO");
         pregEliminarProductoCarrito = pregEliminarProductoCarrito.toUpperCase();
     };
-    while (pregEliminarProductoCarrito=="SI"){
+    if(pregEliminarProductoCarrito=="SI"){
+        mostrarCarrito();
         let id= Number(prompt("Ingrese el id del producto que desea eliminar del carrito."));
         let productoEncontrado = arrayCarrito.find((producto)=>producto.id===id);
         if(!productoEncontrado)
@@ -289,10 +292,9 @@ const eliminarProductoArrayCarrito = () =>
                 eliminarProductoArrayCarrito();
             } 
         }
-        mostrarCarrito();
-        eliminarProductoArrayCarrito();
-    }
-    mostrarMenu();
+    }else{
+        return;
+    }  
 }
 
 mostrarMenu();
@@ -360,6 +362,7 @@ function mostrarMenu()
                 }
                 case 9:
                 {
+                    mostrarCarrito();
                     alert("¡Muchas gracias por su compra!. \nA continuación lo redirigiremos para que pueda realizar el pago.");
                     break;
                 }
