@@ -1,381 +1,191 @@
 //Clase de Productos de Tienda
 class Producto{
-    constructor(id, nombre, precio){
+    constructor(id, nombre, precio, descripcion){
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
+        this.descripcion = descripcion;
     }
 
 }
 
-//Array Productos en Catalogo
-const arrayTienda =[
-    {
-        id:1,
-        nombre:"Desayuno Personalizado 1",
-        precio:1500,
-    },
-    {
-        id:2,
-        nombre:"Desayuno Personalizado 2",
-        precio:2500,
+window.onload = function () {
 
-    },
-    {
-        id:3,
-        nombre:"Desayuno 15 años",
-        precio:2700,
-    },
-    {
-        id:4,
-        nombre:"Bandeja Salada",
-        precio:1800,
-    },
-    {
-        id:5,
-        nombre:"Bandeja Salada y Dulce",
-        precio:2000,
-    },
-    {
-        id:6,
-        nombre:"Torta Personalizada",
-        precio:2000,
-    },
-    {
-        id:7,
-        nombre:"Torta Personalizada Pokemon",
-        precio:2000,
-    },
-    {
-        id:8,
-        nombre:"Torta Princesa",
-        precio:2000,
-    },
-    {
-        id:9,
-        nombre:"Torta Harry",
-        precio:2500,
-    },
-    {
-        id:10,
-        nombre:"Torta Número",
-        precio:3000,
-    },
-    {
-        id:11,
-        nombre:"Torta Letra",
-        precio:2700,
-    },
-    {
-        id:12,
-        nombre:"Bombones y Mini Torta",
-        precio:2500,
-    },
-]
+    //Declaracion de Variables
+    let divRowTienda = document.getElementById("rowTienda");
+    let divCarrito = document.getElementById("carrito");
+    let arrayCarrito = [];
+    let precioTotal = 0;
+    let totalSpan = document.getElementById('total');
+    let botonVaciar = document.getElementById('botonVaciar');
+    let botonComprar = document.getElementById('botonComprar');
 
-//Array Productos en Carrito
-const arrayCarrito = [];
-
-//Funcion Mostrar Catalogo
-const mostrarTienda = () =>{
-    let listaProductos = "";
-    for (let producto in arrayTienda) {
-        const sigProducto = `Producto ${arrayTienda[producto].id}: ${arrayTienda[producto].nombre}. Precio: ${arrayTienda[producto].precio} \n`
-        listaProductos += sigProducto;
+    //Creacion de Cards para productos en la base de datos del catalogo
+    function creadorTienda (){
+        baseDeDatos.forEach((producto)=>{
+            const divColProducto = document.createElement("div");
+            divColProducto.className= "col-md-6 col-lg-4";
+            divColProducto.innerHTML = `<div class="card mb-4 box-shadow border-dark">
+            <img class="imgCardsTienda card-img-top img-fluid" alt="${producto.nombre}" style="object-fit: cover; max-height: 350px;" src="${producto.imagen}" data-holder-rendered="true">
+            <div class="card-body">                       
+            <ul class="list-group mb-3 ">
+            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center"><h6>${producto.nombre}</h2></li>
+            <li class="list-group-item border-dark">${producto.descripcion}</li>
+            </ul>
+            <div class="d-flex justify-content-between align-items-center">
+            <button type="button" id="botonEliminar${producto.id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${producto.id}">Eliminar del Carrito</button>
+            <button type="button" id="botonAnadirProducto${producto.id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${producto.id}">Agregar al Carrito</button>
+            </div>
+            </div>
+            </div>
+            </div>`
+            divRowTienda.appendChild(divColProducto)
+            let botonEliminarProducto = document.getElementById(`botonEliminar${producto.id}` );
+            let botonAnadirProducto = document.getElementById(`botonAnadirProducto${producto.id}`);
+            botonAnadirProducto.addEventListener('click', anadirCarrito);
+            botonEliminarProducto.addEventListener(`click`, eliminarCarritoProducto2); 
+ 
+        });
+        
     }
-    alert(listaProductos);
-}
 
-//Funcion Buscar en Catálogo
-const buscarProductoArrayTienda = () =>{
-    let productoBuscado = prompt("Ingresa el nombre del producto que quires buscar");
-    productoBuscado = productoBuscado.toUpperCase();
-    alert(`Usted ha buscado el producto: ${productoBuscado}`);
-    let productoEncontrado = arrayTienda.filter((producto)=>producto.nombre.toUpperCase() == productoBuscado);
-    if(productoEncontrado==""){
-        alert("Producto no encontrado.")
-        let preguntaBuscar = prompt("¿Quiere buscar otro producto?:\n SI/NO ")
-        preguntaBuscar = preguntaBuscar.toUpperCase();
-        while (preguntaBuscar != "SI" && preguntaBuscar != "NO"){
-            preguntaBuscar = prompt("Opción Inválida. ¿Quiere buscar otro producto en el catálogo?: SI/NO");
-            preguntaBuscar = preguntaBuscar.toUpperCase();
-        };
-        if(preguntaBuscar=="SI"){
-            buscarProductoArrayTienda();
+    //Creacion Carrito
+    function crearCarrito() {
+        divCarrito.textContent = '';
+        let carritoSinDuplicados = [...new Set(arrayCarrito)];
+        carritoSinDuplicados.forEach(function (producto) {
+            // Obtener producto de base de datos
+            let miProducto = baseDeDatos.filter(function(productoBaseDatos) {
+                return productoBaseDatos.id == producto;
+            });
+            let numeroUnidadesProducto = arrayCarrito.reduce(function (total, productoId) {
+                return productoId === producto ? total += 1 : total;
+            }, 0);
+            // Crear nodo carrito
+            let listProductoCarrito = document.createElement('li');
+            listProductoCarrito.className= "list-group-item text-right mx-2";
+            listProductoCarrito.innerText = `${numeroUnidadesProducto} x ${miProducto[0].nombre} - $${miProducto[0].precio}`;
+            // Boton de borrar
+            let botonEliminarProductoCarrito = document.createElement('button');
+            botonEliminarProductoCarrito.className = "botonEliminarProductoCarrito btn btn-secondary mx-5";
+            botonEliminarProductoCarrito.textContent = 'X';
+            botonEliminarProductoCarrito.style.marginLeft = '1rem';
+            botonEliminarProductoCarrito.setAttribute('item', producto);
+            botonEliminarProductoCarrito.addEventListener('click', eliminarCarritoProducto);
+            // agregamos a padres
+            listProductoCarrito.appendChild(botonEliminarProductoCarrito);
+            divCarrito.appendChild(listProductoCarrito);
+        })
+        localStorage.clear();   
+        let arrayCompra = [];
+        let index = 0;
+        for (let producto of arrayCarrito){
+            arrayCompra.push(baseDeDatos[(producto-1)]);               
         }
-        else{
-            mostrarMenu();
-        }      
-    }else{
-        alert(`El producto ${productoBuscado} se encuentra en la tienda.`)
-        mostrarMenu();
+        for (let producto of arrayCompra){          
+            let productoJson = JSON.stringify(producto);
+            localStorage.setItem(`Producto ${index}`, productoJson);
+            index++;
+            console.log(producto)
+        }
+        let arrayCompraJson = JSON.stringify(arrayCompra);
+        localStorage.setItem(`Carrito`, arrayCompraJson);
+    }
+
+    //Funcion Anadir Carro
+    function anadirCarrito(){
+        arrayCarrito.push(this.getAttribute('idProducto'))       
+        crearCarrito();
+        calcularTotal();
     }
     
-}
+    //Funcion Vaciar Carro
+    function vaciarCarrito() {
+        arrayCarrito = [];
+        crearCarrito();
+        calcularTotal();
+    }
 
-//Funcion Agregar Producto Array
-const agregarProductoArrayTienda = () =>
-{      
-        let pregAgregarProductoTienda = prompt("¿Quiere agregar un producto al catálogo?:\n SI/NO");
-        pregAgregarProductoTienda = pregAgregarProductoTienda.toUpperCase();
-        while (pregAgregarProductoTienda != "SI" && pregAgregarProductoTienda != "NO"){
-            pregAgregarProductoTienda = prompt("Opción Inválida. ¿Quiere agregar un producto al catálogo?: SI/NO");
-            pregAgregarProductoTienda = pregAgregarProductoTienda.toUpperCase();
-        };
-        while (pregAgregarProductoTienda=="SI"){
-            let id=1;
-            if(arrayTienda.length>0)
-            {
-                id=arrayTienda[arrayTienda.length-1].id+1;
+    //Funcion eliminar producto de carrito desde carrito
+    function eliminarCarritoProducto() {
+        // Producto a eliminar de carrito
+        let id = this.getAttribute('item');
+        arrayCarrito = arrayCarrito.filter(function (productoId) {
+            return productoId !== id;
+        });
+        crearCarrito();
+        calcularTotal();
+    }
+
+     //Funcion eliminar producto de carrito desde tienda
+     function eliminarCarritoProducto2() {
+        // Producto a eliminar de carrito
+        let id = this.getAttribute('idProducto');
+        arrayCarrito = arrayCarrito.filter(function (productoId) {
+            return productoId !== id;
+        });
+        crearCarrito();
+        calcularTotal();
+    }
+
+    //Funcion calcular Precio Total
+    function calcularTotal() {
+        // Limpiar precio anterior
+        precioTotal = 0;
+        // Recorrer array del carrito
+        for (let producto of arrayCarrito) {
+            // De cada elemento obtenemos su precio
+            let miProducto= baseDeDatos.filter(function(productoBaseDatos) {
+                return productoBaseDatos.id == producto;
+            });
+            precioTotal = precioTotal + miProducto[0].precio;
+        }
+        let total = precioTotal.toFixed(0);
+        totalSpan.textContent = total;
+        precioTotal = precioTotal.toFixed(0);
+        return precioTotal;
+    }
+
+    //Funcion realizar comprar
+    function comprarCarrito(){
+        calcularTotal();
+        alert("Muchas gracias por su compra.")
+        /*localStorage.setItem("Precio Total a Pagar", precioTotal)
+        let arrayCompra = [];
+        let index = 0;
+        for (let producto of arrayCarrito){
+            arrayCompra.push(baseDeDatos[(producto-1)]);               
+        }
+        for (let producto of arrayCompra){          
+            let productoJson = JSON.stringify(producto);
+            localStorage.setItem(`Producto ${index}`, productoJson);
+            index++;
+            console.log(producto)
+        }
+        let arrayCompraJson = JSON.stringify(arrayCompra);
+        localStorage.setItem(`Carrito`, arrayCompraJson);*/
+        vaciarCarrito();
+    }
+
+    //Funcion cargar carrito al refrescar página 
+      function refrescarCarrito(){
+        if (arrayCarrito.length===0){
+            let arrayNuevoCarrito = JSON.parse(localStorage.getItem("Carrito")); 
+            console.log(arrayNuevoCarrito)
+            for(let producto of arrayNuevoCarrito){
+                arrayCarrito.push(producto.id);              
             }
-            
-            let nombre = prompt("Ingrese el nombre del producto que desea agregar.");
-            let precio = Number(prompt("Ingrese el precio del producto que desea agregar."));
-            let nuevoProductoTienda = new Producto(id, nombre, precio);
+            console.log(arrayCarrito)
+        }
+    }
     
-            arrayTienda.push(nuevoProductoTienda);
-            mostrarTienda();
-            pregAgregarProductoTienda = prompt("¿Quiere agregar un producto al catálogo?:\n SI/NO");
-            pregAgregarProductoTienda = pregAgregarProductoTienda.toUpperCase();
-            while (pregAgregarProductoTienda != "SI" && pregAgregarProductoTienda != "NO"){
-                pregAgregarProductoTienda = prompt("Opción Inválida. ¿Quiere agregar un producto al catálogo?: SI/NO");
-                pregAgregarProductoTienda = pregAgregarProductoTienda.toUpperCase();
-            };
-            if(pregAgregarProductoTienda=="SI"){
-                agregarProductoArrayTienda();
-            }
-        }
+
+    //Eventos
+    botonVaciar.addEventListener("click", vaciarCarrito)
+    botonComprar.addEventListener("click", comprarCarrito)
+    
+
+    creadorTienda();
+    refrescarCarrito();
+    crearCarrito();
 }
-
-//Funcion Modificar Producto Array
-const modificarProductoArrayTienda= () =>
-{
-   let id= Number(prompt("Ingrese el id del producto del catálogo que quiere modificar."));
-
-   let existe = arrayTienda.some((producto)=>producto.id===id);
-
-   if(existe)
-   {
-       let productoEncontrado = arrayTienda.find((producto)=>producto.id===id);
-       let nuevoNombre = prompt("Ingrese el nuevo nombre.");
-       let nuevoPrecio = Number(prompt("Ingrese el nuevo precio."));
-
-       productoEncontrado.nombre = nuevoNombre;
-       productoEncontrado.precio = nuevoPrecio;
-
-       console.log(`El producto ${productoEncontrado.id} fue modificado correctamente`)
-   }
-   else
-   {
-       alert("Producto no encontrado.")
-   }
-
-}
-
-//Funcion Eliminar Producto Array
-const eliminarProductoArrayTienda = () =>
-{
-    let pregEliminarProductoTienda = prompt("¿Quiere eliminar un producto del catálogo?:\n SI/NO");
-    pregEliminarProductoTienda = pregEliminarProductoTienda.toUpperCase();
-    while (pregEliminarProductoTienda != "SI" && pregEliminarProductoTienda != "NO"){
-        pregEliminarProductoTienda = prompt("Opción Inválida. ¿Quiere eliminar un producto al catálogo?: SI/NO");
-        pregEliminarProductoTienda = pregEliminarProductoTienda.toUpperCase();
-    };
-    while (pregEliminarProductoTienda=="SI"){
-        let id= Number(prompt("Ingrese el id del producto que desea eliminar."));
-
-        let productoEncontrado = arrayTienda.find((producto)=>producto.id===id);
-
-        if(!productoEncontrado)
-        {
-            alert("Producto no Encontrado.");
-        }
-        else
-        {
-            let indice = arrayTienda.indexOf(productoEncontrado);
-            arrayTienda.splice(indice,1);          
-        }
-        mostrarTienda();
-        pregEliminarProductoTienda = prompt("¿Quiere eliminar un producto del catálogo?:\n SI/NO");
-        pregEliminarProductoTienda = pregEliminarProductoTienda.toUpperCase();
-        while (pregEliminarProductoTienda != "SI" && pregEliminarProductoTienda != "NO"){
-            pregEliminarProductoTienda = prompt("Opción Inválida. ¿Quiere eliminar un producto al catálogo?: SI/NO");
-            pregEliminarProductoTienda = pregEliminarProductoTienda.toUpperCase();
-        };
-        if(pregEliminarProductoTienda=="SI"){
-            eliminarProductoArrayTienda();
-        }
-    }
-}
-
-/*//Clase de Productos de Carrito
-class ProductoCarrito{
-    constructor(id, nombre, precio){
-        this.id = id;
-        this.nombre = nombre;
-        this.precio = precio;
-    }
-
-}*/
-
-//Mostrar Carrito
-const mostrarCarrito = () =>{
-    let listaProductos = "";
-    for (let producto in arrayCarrito) {
-        const sigProducto = `Producto ${arrayCarrito[producto].id}: ${arrayCarrito[producto].nombre}. Precio: ${arrayCarrito[producto].precio} \n`
-        listaProductos += sigProducto;
-    }
-    alert(listaProductos);
-}
-
-//Funcion Agregar Producto a Carrito
-const agregarProductoArrayCarrito = () =>
-{      
-    let pregAgregarProductoCarrito = prompt("¿Quiere agregar un producto al carrito?:\n SI/NO");
-    pregAgregarProductoCarrito = pregAgregarProductoCarrito.toUpperCase();
-    while (pregAgregarProductoCarrito != "SI" && pregAgregarProductoCarrito != "NO"){
-        pregAgregarProductoCarrito = prompt("Opción Inválida. ¿Quiere agregar un producto al carrito?: SI/NO");
-        pregAgregarProductoCarrito = pregAgregarProductoCarrito.toUpperCase();
-    };
-    if(pregAgregarProductoCarrito=="SI"){
-        mostrarTienda();
-        let id= Number(prompt("Ingrese el id del producto del catálogo que quiere agregar al carrito."));
-        let existe = arrayTienda.some((producto)=>producto.id===(id));
-        if(existe)
-        {
-            arrayCarrito.push(arrayTienda[(id-1)]);
-            console.log(`${arrayTienda[(id-1)].nombre} fue agregado al carrito exitosamente.`)
-            alert(`${arrayTienda[(id-1)].nombre} fue agregado al carrito exitosamente.`)
-            mostrarCarrito();
-            agregarProductoArrayCarrito();
-        }
-        else
-        {
-            alert("Producto no encontrado.");
-            agregarProductoArrayCarrito();       
-        }
-    }else{
-        return;
-    }   
-}
-
-//Funcion Eliminar Producto a Carrito
-const eliminarProductoArrayCarrito = () =>
-{
-    console.log(arrayCarrito);
-    let pregEliminarProductoCarrito = prompt("¿Quiere eliminar un producto del carrito?:\n SI/NO");
-    pregEliminarProductoCarrito = pregEliminarProductoCarrito.toUpperCase();
-    while (pregEliminarProductoCarrito != "SI" && pregEliminarProductoCarrito != "NO"){
-        pregEliminarProductoCarrito = prompt("Opción Inválida. ¿Quiere eliminar un producto del carrito?: SI/NO");
-        pregEliminarProductoCarrito = pregEliminarProductoCarrito.toUpperCase();
-    };
-    if(pregEliminarProductoCarrito=="SI"){
-        mostrarCarrito();
-        let id= Number(prompt("Ingrese el id del producto que desea eliminar del carrito."));
-        let productoEncontrado = arrayCarrito.find((producto)=>producto.id===id);
-        if(!productoEncontrado)
-        {
-            alert("Producto no Encontrado.");
-            eliminarProductoArrayCarrito();
-        }
-        else
-        {
-            let indice = arrayCarrito.indexOf(productoEncontrado);
-            if (indice !== -1){
-                console.log(`${arrayCarrito[indice].nombre} fue eliminado del carrito exitosamente.`)
-                alert(`${arrayCarrito[indice].nombre} fue eliminado del carrito exitosamente.`)
-                arrayCarrito.splice((indice),1);
-                mostrarCarrito();
-                eliminarProductoArrayCarrito();  
-            }else{
-                alert("Producto no Encontrado.");
-                eliminarProductoArrayCarrito();
-            } 
-        }
-    }else{
-        return;
-    }  
-}
-
-mostrarMenu();
-
-//Funcion Mostrar Menu con Opciones
-function mostrarMenu()
-{
-    let opcion = 0;
-   
-    while(opcion!==10 && opcion!==9)
-    {
-        opcion = Number( prompt(`Seleccione el número de la opción correspondiente:
-                           1. Mostrar Catálogo de Productos
-                           2. Buscar Producto en Catálogo
-                           3. Agregar Producto a Catálogo
-                           4. Modificar Producto de Catálogo
-                           5. Eliminar Producto de Catálogo
-                           6. Mostrar Carrito
-                           7. Agregar Producto al Carrito
-                           8. Eliminar Producto del Carrito
-                           9. Finalizar Compra
-                           10. Salir`));
-
-        switch(opcion)
-        {
-                case 1:
-                {
-                    mostrarTienda();
-                    break;
-                }
-                case 2: 
-                {
-                    buscarProductoArrayTienda();
-                    break;
-                }
-                case 3: 
-                {
-                    agregarProductoArrayTienda();
-                    break;
-                }
-                case 4: 
-                {
-                    modificarProductoArrayTienda();
-                    break;
-                }
-                case 5:
-                {
-                    eliminarProductoArrayTienda();
-                    break;
-                }
-                case 6:
-                {
-                    mostrarCarrito();
-                    break;
-                }
-                case 7:
-                {
-                    agregarProductoArrayCarrito();
-                    break;
-                }
-                case 8:
-                {
-                    eliminarProductoArrayCarrito();
-                    break;
-                }
-                case 9:
-                {
-                    mostrarCarrito();
-                    alert("¡Muchas gracias por su compra!. \nA continuación lo redirigiremos para que pueda realizar el pago.");
-                    break;
-                }
-                case 10:
-                {
-                    alert("Gracias por Visitarnos.")
-                    break;
-                }
-                default:{
-                    alert("opcion inválida");
-                    break;
-                }
-        }
-    }
-}
-
