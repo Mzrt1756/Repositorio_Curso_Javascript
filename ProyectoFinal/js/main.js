@@ -168,15 +168,16 @@ window.onload = function () {
     }
 
     //Funcion cargar carrito al refrescar página 
-      function refrescarCarrito(){
+    function refrescarCarrito(){
         if (arrayCarrito.length===0){
             let arrayNuevoCarrito = JSON.parse(localStorage.getItem("Carrito")); 
             console.log(arrayNuevoCarrito)
             for(let producto of arrayNuevoCarrito){
-                arrayCarrito.push(producto.id);              
+                    arrayCarrito.push(producto.id);              
             }
             console.log(arrayCarrito)
         }
+        calcularTotal();
     }
     
 
