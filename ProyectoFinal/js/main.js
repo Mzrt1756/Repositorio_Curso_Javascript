@@ -111,7 +111,7 @@ window.onload = function () {
         // Producto a eliminar de carrito
         let id = this.getAttribute('item');
         arrayCarrito = arrayCarrito.filter(function (productoId) {
-            return productoId !== id;
+            return productoId != id;
         });
         crearCarrito();
         calcularTotal();
