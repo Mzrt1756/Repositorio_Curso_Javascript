@@ -19,6 +19,7 @@ window.onload = function () {
     let totalSpan = document.getElementById('total');
     let botonVaciar = document.getElementById('botonVaciar');
     let botonComprar = document.getElementById('botonComprar');
+    
 
     //Creacion de Cards para productos en la base de datos del catalogo
     function creadorTienda (){
@@ -29,8 +30,8 @@ window.onload = function () {
             <img class="imgCardsTienda card-img-top img-fluid" alt="${producto.nombre}" style="object-fit: cover; max-height: 350px;" src="${producto.imagen}" data-holder-rendered="true">
             <div class="card-body">                       
             <ul class="list-group mb-3 ">
-            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center"><h6>${producto.nombre}</h2></li>
-            <li class="list-group-item border-dark">${producto.descripcion}</li>
+            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center"><h5>${producto.nombre}</h5></li>
+            <li class="list-group-item border-dark"><p>${producto.descripcion}</p></li>
             </ul>
             <div class="d-flex justify-content-between align-items-center">
             <button type="button" id="botonEliminar${producto.id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${producto.id}">Eliminar del Carrito</button>
@@ -45,8 +46,7 @@ window.onload = function () {
             botonAnadirProducto.addEventListener('click', anadirCarrito);
             botonEliminarProducto.addEventListener(`click`, eliminarCarritoProducto2); 
  
-        });
-        
+        });       
     }
 
     //Creacion Carrito
@@ -180,7 +180,6 @@ window.onload = function () {
         calcularTotal();
     }
     
-
     //Eventos
     botonVaciar.addEventListener("click", vaciarCarrito)
     botonComprar.addEventListener("click", comprarCarrito)
@@ -190,3 +189,4 @@ window.onload = function () {
     refrescarCarrito();
     crearCarrito();
 }
+
