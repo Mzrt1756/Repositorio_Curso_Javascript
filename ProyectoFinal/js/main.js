@@ -24,25 +24,27 @@ window.onload = function () {
     //Creacion de Cards para productos en la base de datos del catalogo
     function creadorTienda (){
         baseDeDatos.forEach((producto)=>{
+            let {id, nombre, precio, imagen, descripcion} = producto
             const divColProducto = document.createElement("div");
             divColProducto.className= "col-md-6 col-lg-4";
             divColProducto.innerHTML = `<div class="card mb-4 box-shadow border-dark">
-            <img class="imgCardsTienda card-img-top img-fluid" alt="${producto.nombre}" style="object-fit: cover; max-height: 350px;" src="${producto.imagen}" data-holder-rendered="true">
+            <img class="imgCardsTienda card-img-top img-fluid" alt="${nombre}" style="object-fit: cover; max-height: 350px;" src="${imagen}" data-holder-rendered="true">
             <div class="card-body">                       
             <ul class="list-group mb-3 ">
-            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center"><h5>${producto.nombre}</h5></li>
-            <li class="list-group-item border-dark"><p>${producto.descripcion}</p></li>
+            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center"><h5>${nombre}</h5></li>
+            <li class="list-group-item border-dark"><p>${descripcion}</p></li>
+            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center p-1"><p class="font-weight-bold">$${precio}</p></li>
             </ul>
             <div class="d-flex justify-content-between align-items-center">
-            <button type="button" id="botonEliminar${producto.id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${producto.id}">Eliminar del Carrito</button>
-            <button type="button" id="botonAnadirProducto${producto.id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${producto.id}">Agregar al Carrito</button>
+            <button type="button" id="botonEliminar${id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${id}">Eliminar del Carrito</button>
+            <button type="button" id="botonAnadirProducto${id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${id}">Agregar al Carrito</button>
             </div>
             </div>
             </div>
             </div>`
             divRowTienda.appendChild(divColProducto)
-            let botonEliminarProducto = document.getElementById(`botonEliminar${producto.id}` );
-            let botonAnadirProducto = document.getElementById(`botonAnadirProducto${producto.id}`);
+            let botonEliminarProducto = document.getElementById(`botonEliminar${id}` );
+            let botonAnadirProducto = document.getElementById(`botonAnadirProducto${id}`);
             botonAnadirProducto.addEventListener('click', anadirCarrito);
             botonEliminarProducto.addEventListener(`click`, eliminarCarritoProducto2); 
  
@@ -75,6 +77,7 @@ window.onload = function () {
             // agregamos a padres
             listProductoCarrito.appendChild(botonEliminarProductoCarrito);
             divCarrito.appendChild(listProductoCarrito);
+            tooMuch(numeroUnidadesProducto);
         })
         localStorage.clear();   
         let arrayCompra = [];
@@ -90,6 +93,7 @@ window.onload = function () {
         }
         let arrayCompraJson = JSON.stringify(arrayCompra);
         localStorage.setItem(`Carrito`, arrayCompraJson);
+        
     }
 
     //Funcion Anadir Carro
@@ -149,7 +153,8 @@ window.onload = function () {
     //Funcion realizar comprar
     function comprarCarrito(){
         calcularTotal();
-        alert("Muchas gracias por su compra.")
+        precioTotal == 0 ? swal("Debe agregar productos para realizar una compra.") : swal("¡Muchas gracias por su compra", " ", "success");
+        
         /*localStorage.setItem("Precio Total a Pagar", precioTotal)
         let arrayCompra = [];
         let index = 0;
@@ -170,14 +175,18 @@ window.onload = function () {
     //Funcion cargar carrito al refrescar página 
     function refrescarCarrito(){
         if (arrayCarrito.length===0){
-            let arrayNuevoCarrito = JSON.parse(localStorage.getItem("Carrito")); 
-            console.log(arrayNuevoCarrito)
+            let arrayNuevoCarrito = JSON.parse(localStorage.getItem("Carrito")) || []; 
             for(let producto of arrayNuevoCarrito){
                     arrayCarrito.push(producto.id);              
             }
             console.log(arrayCarrito)
         }
         calcularTotal();
+    }
+
+    //Funcion avisar al usuario que esta comprando demasiado
+    function tooMuch(cantidad){
+        cantidad > 3 ? swal("¡Su estómago puede sufrir graves riesgos!", "...de todas maneras no deje de comprarnos.") : swal("¡Buena Elección!", "¡Espero que lo disfrute mucho!", "success");
     }
     
     //Eventos
