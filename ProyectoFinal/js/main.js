@@ -46,7 +46,21 @@ window.onload = function () {
             let botonEliminarProducto = document.getElementById(`botonEliminar${id}` );
             let botonAnadirProducto = document.getElementById(`botonAnadirProducto${id}`);
             botonAnadirProducto.addEventListener('click', anadirCarrito);
+            botonAnadirProducto.addEventListener('click', () =>{
+                Toastify({
+                    text: "!Has agregado un producto al carrito!",
+                    duration: 3000
+                }).showToast();
+            
+            });
             botonEliminarProducto.addEventListener(`click`, eliminarCarritoProducto2); 
+            botonEliminarProducto.addEventListener('click', () =>{
+                Toastify({
+                    text: "!Has eliminado un producto del carrito!",
+                    duration: 3000
+                }).showToast();
+            
+            });
  
         });       
     }
@@ -74,6 +88,13 @@ window.onload = function () {
             botonEliminarProductoCarrito.style.marginLeft = '1rem';
             botonEliminarProductoCarrito.setAttribute('item', producto);
             botonEliminarProductoCarrito.addEventListener('click', eliminarCarritoProducto);
+            botonEliminarProductoCarrito.addEventListener('click', () =>{
+                Toastify({
+                    text: "!Has eliminado un producto del carrito!",
+                    duration: 3000
+                }).showToast();
+            
+            });
             // agregamos a padres
             listProductoCarrito.appendChild(botonEliminarProductoCarrito);
             divCarrito.appendChild(listProductoCarrito);
