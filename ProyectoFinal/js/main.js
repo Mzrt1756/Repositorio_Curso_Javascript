@@ -19,10 +19,17 @@ window.onload = function () {
     let totalSpan = document.getElementById('total');
     let botonVaciar = document.getElementById('botonVaciar');
     let botonComprar = document.getElementById('botonComprar');
-    
-
+    let baseDeDatos = [];
+    let funcionBaseDeDatos = async () => {
+        await fetch('../baseDeDatos.json')
+        .then( (res) => res.json())
+        .then( (producto) => {producto.forEach(producto => {
+            baseDeDatos.push(producto);
+        })})
+    }
     //Creacion de Cards para productos en la base de datos del catalogo
-    function creadorTienda (){
+    async function creadorTienda (){
+        await funcionBaseDeDatos();
         baseDeDatos.forEach((producto)=>{
             let {id, nombre, precio, imagen, descripcion} = producto
             const divColProducto = document.createElement("div");
@@ -66,7 +73,8 @@ window.onload = function () {
     }
 
     //Creacion Carrito
-    function crearCarrito() {
+    async function crearCarrito() {
+        await funcionBaseDeDatos();
         divCarrito.textContent = '';
         let carritoSinDuplicados = [...new Set(arrayCarrito)];
         carritoSinDuplicados.forEach(function (producto) {
@@ -118,21 +126,24 @@ window.onload = function () {
     }
 
     //Funcion Anadir Carro
-    function anadirCarrito(){
+    async function anadirCarrito(){
+        await funcionBaseDeDatos();
         arrayCarrito.push(this.getAttribute('idProducto'))       
         crearCarrito();
         calcularTotal();
     }
     
     //Funcion Vaciar Carro
-    function vaciarCarrito() {
+    async function vaciarCarrito() {
+        await funcionBaseDeDatos();
         arrayCarrito = [];
         crearCarrito();
         calcularTotal();
     }
 
     //Funcion eliminar producto de carrito desde carrito
-    function eliminarCarritoProducto() {
+    async function eliminarCarritoProducto() {
+        await funcionBaseDeDatos();
         // Producto a eliminar de carrito
         let id = this.getAttribute('item');
         arrayCarrito = arrayCarrito.filter(function (productoId) {
@@ -143,7 +154,8 @@ window.onload = function () {
     }
 
      //Funcion eliminar producto de carrito desde tienda
-     function eliminarCarritoProducto2() {
+    async function eliminarCarritoProducto2() {
+        await funcionBaseDeDatos();
         // Producto a eliminar de carrito
         let id = this.getAttribute('idProducto');
         arrayCarrito = arrayCarrito.filter(function (productoId) {
@@ -154,7 +166,8 @@ window.onload = function () {
     }
 
     //Funcion calcular Precio Total
-    function calcularTotal() {
+    async function calcularTotal() {
+        await funcionBaseDeDatos();
         // Limpiar precio anterior
         precioTotal = 0;
         // Recorrer array del carrito
@@ -172,7 +185,8 @@ window.onload = function () {
     }
 
     //Funcion realizar comprar
-    function comprarCarrito(){
+    async function comprarCarrito(){
+        await funcionBaseDeDatos();
         calcularTotal();
         precioTotal == 0 ? swal("Debe agregar productos para realizar una compra.") : swal("¡Muchas gracias por su compra", " ", "success");
         
@@ -194,7 +208,8 @@ window.onload = function () {
     }
 
     //Funcion cargar carrito al refrescar página 
-    function refrescarCarrito(){
+    async function refrescarCarrito(){
+        await funcionBaseDeDatos();
         if (arrayCarrito.length===0){
             let arrayNuevoCarrito = JSON.parse(localStorage.getItem("Carrito")) || []; 
             for(let producto of arrayNuevoCarrito){
@@ -205,16 +220,12 @@ window.onload = function () {
         calcularTotal();
     }
 
-    //Funcion avisar al usuario que esta comprando demasiado
-    function tooMuch(cantidad){
-        cantidad > 3 ? swal("¡Su estómago puede sufrir graves riesgos!", "...de todas maneras no deje de comprarnos.") : swal("¡Buena Elección!", "¡Espero que lo disfrute mucho!", "success");
-    }
-    
+
     //Eventos
     botonVaciar.addEventListener("click", vaciarCarrito)
     botonComprar.addEventListener("click", comprarCarrito)
     
-
+    
     creadorTienda();
     refrescarCarrito();
     crearCarrito();
