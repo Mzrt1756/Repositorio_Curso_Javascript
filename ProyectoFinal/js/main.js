@@ -33,18 +33,18 @@ window.onload = function () {
         baseDeDatos.forEach((producto)=>{
             let {id, nombre, precio, imagen, descripcion} = producto
             const divColProducto = document.createElement("div");
-            divColProducto.className= "col-md-6 col-lg-4";
-            divColProducto.innerHTML = `<div class="card mb-4 box-shadow border-dark">
-            <img class="imgCardsTienda card-img-top img-fluid" alt="${nombre}" style="object-fit: cover; max-height: 350px;" src="${imagen}" data-holder-rendered="true">
-            <div class="card-body">                       
-            <ul class="list-group mb-3 ">
-            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center"><h5>${nombre}</h5></li>
-            <li class="list-group-item border-dark"><p>${descripcion}</p></li>
-            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center p-1"><p class="font-weight-bold">$${precio}</p></li>
+            divColProducto.className= "container col-lg-6 col-xl-4";
+            divColProducto.innerHTML = `<div id="tarjetaComida" class="card mb-4 box-shadow border border-dark shadow">
+            <img class="imgCardsTienda card-img-top img-fluid" alt="${nombre}" style="object-fit: cover; max-height: 300px;" src="${imagen}" data-holder-rendered="true">
+            <div id="tarjetaDescripcion" class="card-body">                       
+            <ul class="list-group mb-3 shadow">
+            <li class="list-group-item active bg-warning bg-opacity-50 text-dark text-center border border-dark"><h5 class="lead">${nombre}</h5></li>
+            <li id="descripcionComida" class="list-group-item border-dark"><p>${descripcion}</p></li>
+            <li id="precioComida" class="list-group-item active bg-warning bg-opacity-50 text-dark text-center p-1 border border-dark"><p class="pt-1">$${precio}</p></li>
             </ul>
             <div class="d-flex justify-content-between align-items-center">
-            <button type="button" id="botonEliminar${id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${id}">Eliminar del Carrito</button>
-            <button type="button" id="botonAnadirProducto${id}" class="btn btn-sm btn-warning text-white mx-1" idProducto="${id}">Agregar al Carrito</button>
+            <button type="button" id="botonEliminar${id}" class="btn btn-sm btn-warning text-white mx-1 shadow" idProducto="${id}">Eliminar del Carrito</button>
+            <button type="button" id="botonAnadirProducto${id}" class="btn btn-sm btn-warning text-white mx-1 shadow" idProducto="${id}">Agregar al Carrito</button>
             </div>
             </div>
             </div>
@@ -62,10 +62,14 @@ window.onload = function () {
             });
             botonEliminarProducto.addEventListener(`click`, eliminarCarritoProducto2); 
             botonEliminarProducto.addEventListener('click', () =>{
-                Toastify({
-                    text: "!Has eliminado un producto del carrito!",
-                    duration: 3000
-                }).showToast();
+                if (arrayCarrito.length!==0){
+                    Toastify({
+                        text: "!Has eliminado un producto del carrito!",
+                        duration: 3000,
+                        
+                    }).showToast();
+                }
+                
             
             });
  
@@ -91,7 +95,7 @@ window.onload = function () {
             listProductoCarrito.innerText = `${numeroUnidadesProducto} x ${miProducto[0].nombre} - $${miProducto[0].precio}`;
             // Boton de borrar
             let botonEliminarProductoCarrito = document.createElement('button');
-            botonEliminarProductoCarrito.className = "botonEliminarProductoCarrito btn btn-secondary mx-5";
+            botonEliminarProductoCarrito.className = "botonEliminarProductoCarrito btn btn-secondary mx-5 shadow";
             botonEliminarProductoCarrito.textContent = 'X';
             botonEliminarProductoCarrito.style.marginLeft = '1rem';
             botonEliminarProductoCarrito.setAttribute('item', producto);
@@ -106,7 +110,6 @@ window.onload = function () {
             // agregamos a padres
             listProductoCarrito.appendChild(botonEliminarProductoCarrito);
             divCarrito.appendChild(listProductoCarrito);
-            tooMuch(numeroUnidadesProducto);
         })
         localStorage.clear();   
         let arrayCompra = [];
@@ -189,21 +192,7 @@ window.onload = function () {
         await funcionBaseDeDatos();
         calcularTotal();
         precioTotal == 0 ? swal("Debe agregar productos para realizar una compra.") : swal("¡Muchas gracias por su compra", " ", "success");
-        
-        /*localStorage.setItem("Precio Total a Pagar", precioTotal)
-        let arrayCompra = [];
-        let index = 0;
-        for (let producto of arrayCarrito){
-            arrayCompra.push(baseDeDatos[(producto-1)]);               
-        }
-        for (let producto of arrayCompra){          
-            let productoJson = JSON.stringify(producto);
-            localStorage.setItem(`Producto ${index}`, productoJson);
-            index++;
-            console.log(producto)
-        }
-        let arrayCompraJson = JSON.stringify(arrayCompra);
-        localStorage.setItem(`Carrito`, arrayCompraJson);*/
+
         vaciarCarrito();
     }
 
